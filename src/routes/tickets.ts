@@ -7,7 +7,7 @@ const router = Router();
 
 // TODO: Student implementation - Part 1: Ticket Routes
 // GET /tickets
-router.get('/tickets', async(req: Request, res: Response) => {
+router.get('/', async(req: Request, res: Response) => {
     try{
         let limit = req.query.limit ? Number(req.query.limit): 10;
         let offset = req.query.offset ? Number(req.query.offset): 0;
@@ -25,7 +25,7 @@ router.get('/tickets', async(req: Request, res: Response) => {
     }
 });
 // GET /tickets/:id
-router.get('/tickets/:id', async(req: Request, res: Response) => {
+router.get('/:id', async(req: Request, res: Response) => {
     try{
         let id = Number(req.params.id);
         let tic = await getTicketById(id);
@@ -42,7 +42,7 @@ router.get('/tickets/:id', async(req: Request, res: Response) => {
 });
 
 // POST /tickets
-router.post('/tickets', authMiddleware, (req: Request, res: Response) => {
+router.post('/', authMiddleware, (req: Request, res: Response) => {
     try{
         let creator_id = Number(res.locals.userId);
         let title = String(req.body);
@@ -56,7 +56,7 @@ router.post('/tickets', authMiddleware, (req: Request, res: Response) => {
     }
 });
 // PATCH /tickets/:id/status
-router.post('/tickets/:id/status', (req: Request, res:Response) => {
+router.patch('/:id/status', (req: Request, res:Response) => {
     try{
         let ticId = Number(req.params.id);
         let status = String(req.body.status);
