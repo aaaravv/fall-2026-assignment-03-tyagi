@@ -55,6 +55,32 @@ describe('Part 1: API Integration Tests', () => {
     expect(tixList.body[0].status).toBe('TODO');
   })
 
+  it('should retrieve by tickets by ID successfully if correct id is given', async() => {
+    
+    let resp = (await request(app).get('/tickets/1'));
+    
+    expect(resp.status).toBe(200);
+    expect(resp.body.status).toBe('TODO');
+  });
 
+  it('should retrieve by tickets by ID unsuccessfully if wrong id is given, auth middleware is triggered and rejects the NaN test id', async() => {
+    
+    let resp = (await request(app).post('/tickets').set('X-User-Id', 'hello'));
+    
+    expect(resp.status).toBe(401);
+  });  
+
+  it('should change ticket index 1s TODO to hello', async() => {
+    let change = await (await request(app).patch('/tickets/1/status').set('X-User-Id', '1').send({status: 'hello'}));
+    let check = await request(app).get('/tickets/1');
+
+    expect(change.status).toBe(200);
+    expect(check.body.status).toBe('hello');
+  })
+
+  it('should fail to change ticket index 1s TODO to hello when given wrong user id', async() => {
+    let change = await (await request(app).patch('/tickets/1/status').set('X-User-Id', 'wrong').send({status: 'hello'}));
+    expect(change.status).toBe(401);
+  })
 
 });
